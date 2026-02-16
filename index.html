@@ -1110,9 +1110,8 @@
 
         function createEmojiKeyboard() {
             const keyboard = document.getElementById('emojiKeyboard');
-            const shuffledEmojis = shuffleArray(emojiData);
             
-            shuffledEmojis.forEach(item => {
+            emojiData.forEach(item => {
                 const button = document.createElement('button');
                 button.className = 'emoji-btn';
                 button.textContent = item.emoji;
