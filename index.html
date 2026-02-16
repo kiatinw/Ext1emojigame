@@ -221,12 +221,6 @@
             margin-bottom: 5px;
         }
 
-        .settings-btn-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
         .settings-btn {
             background: #667eea;
             color: white;
@@ -237,6 +231,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
 
         .settings-btn:hover {
@@ -410,9 +405,7 @@
         <h1>🎮 Extension 1 Emoji Game</h1>
         <p class="subtitle">Communicate mathematical terms using only emojis!</p>
         
-        <div class="settings-btn-container">
-            <button class="settings-btn" onclick="openModal()">⚙️ Select Terms</button>
-        </div>
+        <button class="settings-btn" onclick="openModal()">⚙️ Select Terms</button>
         
         <div class="instructions">
             <strong>How to play:</strong>
@@ -422,17 +415,6 @@
                 <li>Choose emojis that represent the term</li>
                 <li>Others guess the term from your emojis!</li>
                 <li>Click "Next Term" for a new challenge</li>
-            </ol>
-        </div>
-
-        <div class="instructions">
-            <strong>How to play (charades):</strong>
-            <ol>
-                <li>Look at the term displayed below</li>
-                <li>Click "Hide Term" to hide it from view</li>
-                <li>Act out the term. You are NOT allowed to spell or use numbers!!!!</li>
-                <li>Others guess the term from your acting.</li>
-                <li>The next student clisk on "Next Term"</li>
             </ol>
         </div>
 
@@ -462,6 +444,11 @@
             <h2>⚙️ Select Terms</h2>
             <p class="modal-subtitle">Choose which mathematical terms you want to include in the game</p>
             
+            <div class="random-selection">
+                <button class="random-btn" onclick="selectRandomTerms(10)">🎲 Random 10</button>
+                <button class="random-btn" onclick="selectRandomTerms(20)">🎲 Random 20</button>
+            </div>
+            
             <div class="term-list" id="termList"></div>
             
             <div class="selected-count" id="selectedCount">16 of 16 terms selected</div>
@@ -478,47 +465,48 @@
 
     <script>
         const terms = [
-            "absolute value",
-            "amplitude",
-            "angle of inclination",
-            "antiderivative",
-            "arithmetic sequence",
-            "assumption step of mathematical induction,
-            "asymptote",
             "binomial coefficient",
             "binomial distribution",
             "binomial expansion",
             "column vector notation",
             "combination",
             "component form of a vector",
+            "displacement vector",
+            "factor theorem",
+            "factorial",
+            "fundamental counting principle",
+            "mathematical induction",
+            "multiplicity of a root",
+            "permutation",
+            "position vector",
+            "remainder theorem",
+            "scalar",
+            "absolute value",
+            "amplitude",
+            "angle of inclination",
+            "antiderivative",
+            "arithmetic sequence",
+            "asymptote",
             "concavity",
             "conditional probability",
             "dilation",
             "discrete random variable",
-            "displacement vector",
             "domain",
             "expected value",
-            "factor theorem",
-            "factorial",
-            "fundamental counting principle",
             "geometric sequence",
             "interval notation",
             "limit",
-            "magnitude",
-            "mathematical induction",
-            "multiplicity of a root",
             "odd function",
-            "permutation",
             "polynomial",
-            "position vector",
             "rate of change",
-            "remainder theorem",
-            "scalar",
             "secant",
             "second derivative",
             "tangent",
+            "vertical line test",
+            "the assumption step of mathematical induction",
+            "the chain rule",
             "variance",
-            "vertical line test"
+            "magnitude"
         ];
 
         let selectedTerms = [...terms]; // Start with all terms selected
@@ -583,6 +571,30 @@
                 const checkbox = document.getElementById(`term-${index}`);
                 if (checkbox) checkbox.checked = false;
             });
+            updateSelectedTerms();
+        }
+
+        function selectRandomTerms(count) {
+            // First deselect all
+            terms.forEach((term, index) => {
+                const checkbox = document.getElementById(`term-${index}`);
+                if (checkbox) checkbox.checked = false;
+            });
+            
+            // Create array of all indices and shuffle it
+            const allIndices = terms.map((_, i) => i);
+            for (let i = allIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allIndices[i], allIndices[j]] = [allIndices[j], allIndices[i]];
+            }
+            
+            // Select first 'count' random indices
+            const randomIndices = allIndices.slice(0, Math.min(count, terms.length));
+            randomIndices.forEach(index => {
+                const checkbox = document.getElementById(`term-${index}`);
+                if (checkbox) checkbox.checked = true;
+            });
+            
             updateSelectedTerms();
         }
 
