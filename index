@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extension 1 Emoji Game</title>
+    <title>Emoji Math Game</title>
     <style>
         * {
             margin: 0;
@@ -226,8 +226,6 @@
         </div>
     </div>
 
-
-    <!-- INSERT MORE TERMS HERE-->
     <script>
         const terms = [
             "binomial coefficient",
