@@ -220,12 +220,192 @@
         .instructions li {
             margin-bottom: 5px;
         }
+
+        .settings-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .settings-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .modal-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .term-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .term-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .term-checkbox:hover {
+            background: #f0f4ff;
+            border-color: #667eea;
+        }
+
+        .term-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .term-checkbox label {
+            cursor: pointer;
+            font-size: 1em;
+            color: #333;
+            flex: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-all-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .select-all-btn:hover {
+            background: #059669;
+        }
+
+        .deselect-all-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .deselect-all-btn:hover {
+            background: #dc2626;
+        }
+
+        .close-modal-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .close-modal-btn:hover {
+            background: #5568d3;
+        }
+
+        .selected-count {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .random-selection {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+        }
+
+        .random-btn {
+            flex: 1;
+            padding: 10px 15px;
+            font-size: 0.95em;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            color: #667eea;
+        }
+
+        .random-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎮 Extension 1 Emoji Game</h1>
         <p class="subtitle">Communicate mathematical terms using only emojis!</p>
+        
+        <button class="settings-btn" onclick="openModal()">⚙️ Select Terms</button>
         
         <div class="instructions">
             <strong>How to play:</strong>
@@ -258,6 +438,31 @@
         </div>
     </div>
 
+    <!-- Modal for selecting terms -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOutsideClick(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <h2>⚙️ Select Terms</h2>
+            <p class="modal-subtitle">Choose which mathematical terms you want to include in the game</p>
+            
+            <div class="random-selection">
+                <button class="random-btn" onclick="selectRandomTerms(10)">🎲 Random 10</button>
+                <button class="random-btn" onclick="selectRandomTerms(20)">🎲 Random 20</button>
+            </div>
+            
+            <div class="term-list" id="termList"></div>
+            
+            <div class="selected-count" id="selectedCount">16 of 16 terms selected</div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn select-all-btn" onclick="selectAllTerms()">Select All</button>
+                <button class="modal-btn deselect-all-btn" onclick="deselectAllTerms()">Deselect All</button>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn close-modal-btn" onclick="closeModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const terms = [
             "binomial coefficient",
@@ -277,6 +482,114 @@
             "remainder theorem",
             "scalar"
         ];
+
+        let selectedTerms = [...terms]; // Start with all terms selected
+        let currentTermIndex = -1;
+        let isHidden = false;
+        let allEmojiButtons = [];
+
+        function createTermList() {
+            const termList = document.getElementById('termList');
+            termList.innerHTML = '';
+            
+            terms.forEach((term, index) => {
+                const div = document.createElement('div');
+                div.className = 'term-checkbox';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `term-${index}`;
+                checkbox.checked = selectedTerms.includes(term);
+                checkbox.onchange = () => updateSelectedTerms();
+                
+                const label = document.createElement('label');
+                label.htmlFor = `term-${index}`;
+                label.textContent = term;
+                
+                div.appendChild(checkbox);
+                div.appendChild(label);
+                termList.appendChild(div);
+            });
+            
+            updateSelectedCount();
+        }
+
+        function updateSelectedTerms() {
+            selectedTerms = [];
+            terms.forEach((term, index) => {
+                const checkbox = document.getElementById(`term-${index}`);
+                if (checkbox && checkbox.checked) {
+                    selectedTerms.push(term);
+                }
+            });
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const count = selectedTerms.length;
+            const total = terms.length;
+            document.getElementById('selectedCount').textContent = 
+                `${count} of ${total} term${count !== 1 ? 's' : ''} selected`;
+        }
+
+        function selectAllTerms() {
+            terms.forEach((term, index) => {
+                const checkbox = document.getElementById(`term-${index}`);
+                if (checkbox) checkbox.checked = true;
+            });
+            updateSelectedTerms();
+        }
+
+        function deselectAllTerms() {
+            terms.forEach((term, index) => {
+                const checkbox = document.getElementById(`term-${index}`);
+                if (checkbox) checkbox.checked = false;
+            });
+            updateSelectedTerms();
+        }
+
+        function selectRandomTerms(count) {
+            // First deselect all
+            terms.forEach((term, index) => {
+                const checkbox = document.getElementById(`term-${index}`);
+                if (checkbox) checkbox.checked = false;
+            });
+            
+            // Create array of all indices and shuffle it
+            const allIndices = terms.map((_, i) => i);
+            for (let i = allIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allIndices[i], allIndices[j]] = [allIndices[j], allIndices[i]];
+            }
+            
+            // Select first 'count' random indices
+            const randomIndices = allIndices.slice(0, Math.min(count, terms.length));
+            randomIndices.forEach(index => {
+                const checkbox = document.getElementById(`term-${index}`);
+                if (checkbox) checkbox.checked = true;
+            });
+            
+            updateSelectedTerms();
+        }
+
+        function openModal() {
+            createTermList();
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            // If current term is not in selected terms, get a new one
+            if (currentTermIndex >= 0 && !selectedTerms.includes(terms[currentTermIndex])) {
+                nextTerm();
+            }
+        }
+
+        function closeModalOnOutsideClick(event) {
+            if (event.target.id === 'modalOverlay') {
+                closeModal();
+            }
+        }
 
         // Emoji data with searchable keywords
         const emojiData = [
@@ -1327,22 +1640,25 @@
             { emoji: "🇿🇼", keywords: ["zimbabwe", "flag"] }
         ];
 
-        let currentTermIndex = -1;
-        let isHidden = false;
-        let allEmojiButtons = [];
-
-        function shuffleArray(array) {
-            const newArray = [...array];
-            for (let i = newArray.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-            }
-            return newArray;
-        }
-
         function nextTerm() {
-            const availableIndices = terms.map((_, i) => i).filter(i => i !== currentTermIndex);
-            currentTermIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+            if (selectedTerms.length === 0) {
+                const termElement = document.getElementById('term');
+                termElement.textContent = 'No terms selected! Click "Select Terms" button.';
+                return;
+            }
+            
+            // Get indices of selected terms
+            const selectedIndices = terms
+                .map((term, index) => selectedTerms.includes(term) ? index : -1)
+                .filter(index => index !== -1)
+                .filter(index => index !== currentTermIndex);
+            
+            if (selectedIndices.length === 0) {
+                // Only one term selected and it's already showing
+                return;
+            }
+            
+            currentTermIndex = selectedIndices[Math.floor(Math.random() * selectedIndices.length)];
             
             const termElement = document.getElementById('term');
             termElement.textContent = terms[currentTermIndex];
